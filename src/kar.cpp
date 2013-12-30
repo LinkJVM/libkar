@@ -268,15 +268,15 @@ bool Kar::addPreference(const QString& name, const QString& value){
 	if(m_preferences.contains(name)){
 		return false;
 	}
-	m_preferences.insert(name, preferences);
+	m_preferences.insert(name, value);
 	return true;
 }
 
 bool Kar::hasPreference(const QString& name) const{
-	return m_preference.contains(name);
+	return m_preferences.contains(name);
 }
 
-const QString& Kar::getPreference(const QString& name) const{
+const QString Kar::getPreference(const QString& name) const{
 	return m_preferences.value(name);
 }
 
@@ -284,7 +284,7 @@ void Kar::setPreference(const QString& name, const QString& value){
 	m_preferences.insert(name, value);
 }
 
-const Kar::PreferenceMap Kar::preferences() const{
+const Kar::PreferenceMap& Kar::preferences() const{
 	return m_preference;
 }
 
@@ -307,7 +307,7 @@ QDataStream& operator<<(QDataStream& out, const kiss::Kar& kar)
 QDataStream& operator>>(QDataStream& in, kiss::Kar& kar)
 {
 	QMap<QString, QByteArray> compressedData;
-	QMap<Qstring, QString> compressedPreferences;
+	QMap<QString, QString> compressedPreferences;
 	char *magic;
 	in >> magic;
 	const bool good = strcmp(magic, KAR_MAGIC) == 0;
