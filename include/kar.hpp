@@ -58,7 +58,7 @@ namespace kiss
 		bool addPreference(const QString& name, const QString& value);
 		bool hasPreference(const QString& name) const;
 		const QString& getPreference(const QString& name) const;
-		setPreference(const QString& name, const QString& value);
+		void setPreference(const QString& name, const QString& value);
 		
 		const PreferenceMap& preferences() const;
 		void setPreferences(const PreferenceMap& preferences);
