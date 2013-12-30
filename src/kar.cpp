@@ -296,7 +296,7 @@ void Kar::setPreference(const QString& name, const QString& value){
 	m_preferences.insert(name, value);
 }
 
-const Kar::Preference Kar::preferences() const{
+const Kar::PreferenceMap Kar::preferences() const{
 	return m_preference;
 }
 
