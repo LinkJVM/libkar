@@ -46,6 +46,8 @@ namespace kiss
 				
 		Kar();
 		Kar(const DataMap& data);
+		Kar(const PreferenceMap& preferences);
+		Kar(const DataMap&, const PreferenceMap& preferences); 
 		
 		bool addFile(const QString& name, const QByteArray& data);
 		void setFile(const QString& name, const QByteArray& data);
