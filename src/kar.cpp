@@ -160,6 +160,15 @@ Kar::Kar(const Kar::DataMap& data)
 {
 }
 
+Kar::Kar(const Kar::PreferenceMap& preferences) 
+	: m_preferences(preferences){
+}
+
+Kar::Kar(const Kar::DataMap& data, const Kar::PreferenceMap& preferences)
+	: m_data(data), m_preferences(preferences){
+	
+}
+
 void Kar::create(const KarPtr& archive, const QString& path, const QString& subpath)
 {
 	QFileInfoList files = QDir(path + (subpath.isEmpty() ? "" : "/" + subpath)).entryInfoList(QDir::Dirs
@@ -251,6 +260,34 @@ bool Kar::isValid(const QString &path)
 	file.close();
 	return good;
 }
+
+bool Kar::addPreference(const QString& name, const QString& value){
+	if(m_preferences.contains(name)){
+		return false;
+	}
+	m_preferences.insert(name, preferences);
+	return true;
+}
+
+bool Kar::hasPreference(const QString& name) const{
+	return m_preference.contains(name);
+}
+
+const QString& Kar::getPreference(const QString& name) const{
+	return m_preferences.value(name);
+}
+
+void Kar::setPreference(const QString& name, const QString& value){
+	m_preferences.insert(name, value);
+}
+
+const Kar::Preference Kar::preferences() const{
+	return m_preference;
+}
+
+void setPreferences(const Kar::PreferenceMap preferences){
+	m_preferenceMap = preferences;
+} 
 
 QDataStream& operator<<(QDataStream& out, const kiss::Kar& kar)
 {
