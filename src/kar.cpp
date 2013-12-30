@@ -288,7 +288,7 @@ const Kar::PreferenceMap& Kar::preferences() const{
 	return m_preferences;
 }
 
-void setPreferences(const Kar::PreferenceMap preferences){
+void Kar::setPreferences(const Kar::PreferenceMap preferences){
 	m_preferences = preferences;
 } 
 
