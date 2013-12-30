@@ -103,7 +103,6 @@ KarPtr Kar::load(const QString& path)
 	QDataStream stream(&file);
 	stream.setVersion(QDataStream::Qt_4_0);
 	QMap<QString, QByteArray> compressedData;
-	QMap<QString, QString> compressedPreferences;
 	char *magic;
 	stream >> magic;
 	const bool good = strcmp(magic, KAR_MAGIC) == 0;
@@ -117,12 +116,8 @@ KarPtr Kar::load(const QString& path)
 	foreach(const QString& key, compressedData.keys()) {
 		data.insert(key, qUncompress(compressedData[key]));
 	}
-	
-	stream >> compressedPreferences;
 	QMap<QString, QString> preferences;
-	foreach(const QString& key, compressedPreferences.keys()){
-		preferences.insert(key, qUncompress(compressedPreferences.value(key)));
-	}
+	stream >> preferences;
 	file.close();
 	return KarPtr(new Kar(data, preferences));
 }
@@ -133,20 +128,13 @@ bool Kar::save(const QString& path)
 	if(!file.open(QIODevice::WriteOnly)) return false;
 	QDataStream stream(&file);
 	stream.setVersion(QDataStream::Qt_4_0);
-	
 	QMap<QString, QByteArray> compressedData;
 	foreach(const QString& key, m_data.keys()) {
 		compressedData.insert(key, qCompress(m_data[key]));
-	}
-	
-	QMap<QString, QString> compressedPreferences;
-	foreach(const QString& key, m_preferences.keys()){
-		compressedPreferences.insert(key, qCompress(m_data))
-	}
-		
+	}		
 	stream << KAR_MAGIC;
 	stream << compressedData;
-	stream << compressedPreferences;
+	stream << m_preferences;
 	file.close();
 	return true;
 }
@@ -301,7 +289,7 @@ const Kar::PreferenceMap Kar::preferences() const{
 }
 
 void setPreferences(const Kar::PreferenceMap preferences){
-	m_preferenceMap = preferences;
+	m_preferences = preferences;
 } 
 
 QDataStream& operator<<(QDataStream& out, const kiss::Kar& kar)
@@ -309,16 +297,10 @@ QDataStream& operator<<(QDataStream& out, const kiss::Kar& kar)
 	QMap<QString, QByteArray> compressedData;
 	foreach(const QString& key, kar.data().keys()) {
 		compressedData.insert(key, qCompress(kar.data()[key]));
-	}
-	
-	QMap<QString, QString> compressedPreferences;
-	foreach(const QString& key, kar.preferences().keys()){
-		compressedPreferences.insert(key, qCompress( kar.preferences().value(key)))
-	}
-	
+	}	
 	out << KAR_MAGIC;
 	out << compressedData;
-	out << compressedPreferences;
+	out << kar.preferences();
 	return out;
 }
 
@@ -336,13 +318,8 @@ QDataStream& operator>>(QDataStream& in, kiss::Kar& kar)
 	foreach(const QString& key, compressedData.keys()) {
 		data.insert(key, qUncompress(compressedData[key]));
 	}
-	
-	in >> compressedPreferences;
 	QMap<QString, QString> preferences;
-	foreach(const QString& key, compressedPreferences.keys()){
-		preferences.insert(key, qUncompress(compressedPreferences.value(key)));
-	}
-	
+	in >> preferences;
 	kar.setData(data);
 	kar.setPreferences(preferences);
 	return in;
