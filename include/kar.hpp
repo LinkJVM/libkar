@@ -42,7 +42,8 @@ namespace kiss
 	{
 	public:
 		typedef QMap<QString, QByteArray> DataMap;
-		
+		typedef QMap<QString, QString> PreferenceMap;
+				
 		Kar();
 		Kar(const DataMap& data);
 		
@@ -51,6 +52,15 @@ namespace kiss
 		bool removeFile(const QString& name);
 		bool hasFile(const QString& name);
 		bool rename(const QString& name, const QString& newName);
+		
+		bool addPreference(const QString& name, const QString& value);
+		bool hasPreference(const QString& name) const;
+		const QString& getPreference(con QString& name) const;
+		bool setPreference(const QString& name, const QString& value);
+		
+		const PreferenceMap& preferences() const;
+		void setPreferences(const PreferenceMap& preferences);
+		
 		
 		QByteArray data(const QString& name) const;
 		QStringList files() const;
@@ -70,8 +80,8 @@ namespace kiss
 	private:
 		static void create(const KarPtr& archive, const QString& path, const QString& subpath);
 		bool extract(const QString& path, const QString& subpath) const;
-		
 		DataMap m_data;
+		PreferenceMap m_preferences;
 	};
 }
 
